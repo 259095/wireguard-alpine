@@ -1,0 +1,16 @@
+FROM alpine:latest
+
+# Documentation and examples
+# https://wiki.alpinelinux.org/wiki/Configure_a_Wireguard_interface_(wg)
+
+RUN apk add --no-cache --update wireguard-tools libqrencode && \
+    rm -rf /var/cache/apk/*
+
+COPY config/template.conf .
+
+CMD wg genkey > privatekey && \
+    cat template.conf | \
+    sed "s|privatekey|`cat privatekey`|g" | \
+    sed "s|publickey|`cat privatekey | wg pubkey`|g" | \
+    sed "s|presharedkey|`wg genpsk`|g" | \
+    qrencode -t ansiutf8 ; rm privatekey

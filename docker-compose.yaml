@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  wireguard:
+    build: .
+    image: wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "xx:xx/udp"
+    volumes:
+      - ./config/:/etc/wireguard
+    restart: always
